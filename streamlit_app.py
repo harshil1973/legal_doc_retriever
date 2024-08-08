@@ -49,6 +49,6 @@ search = st.text_input("Search through documents by keyword", value="")
 if st.button("Search"):
     nodes = retriever.retrieve("bail application  ")
     for node in nodes:
-        st.rrite(node.metadata['file_name'])
+        st.write(node.metadata['file_name'])
         # print("---")
-        st.markdown(display_source_node(node, source_length=5000))
+        st.markdown(node)
