@@ -9,8 +9,8 @@ from llama_index.core import VectorStoreIndex, StorageContext
 import sys
 import streamlit as st
 import os
-__import__('pysqlite3')
 nest_asyncio.apply()
+__import__('pysqlite3')
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 db = chromadb.PersistentClient(path="./legal_doc_hybrid_v2")
