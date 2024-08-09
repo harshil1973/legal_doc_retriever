@@ -1,5 +1,4 @@
 streamlit
-pysqlite3-binary
 llama-index
 llama-index-retrievers-bm25
 llama-index-embeddings-huggingface

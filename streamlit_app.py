@@ -10,8 +10,6 @@ import sys
 import streamlit as st
 import os
 nest_asyncio.apply()
-__import__('pysqlite3')
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 db = chromadb.PersistentClient(path="./legal_doc_hybrid_v2")
 chroma_collection = db.get_or_create_collection("dense_vectors")
@@ -47,8 +45,8 @@ os.environ["HF_TOKEN"] = st.secret["HF_TOKEN"]
 search = st.text_input("Search through documents by keyword", value="")
 
 if st.button("Search"):
-    nodes = retriever.retrieve("bail application  ")
+    nodes = retriever.retrieve(search)
     for node in nodes:
         st.write(node.metadata['file_name'])
         # print("---")
-        st.markdown(node)
+        st.write(node)
