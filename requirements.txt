@@ -6,3 +6,4 @@ llama-index-vector-stores-chroma
 xformers
 matplotlib
 ipython
+protobuf==3.20.*
