@@ -1,10 +1,10 @@
 from llama_index.core.response.notebook_utils import display_source_node
-from llama_index.core.retrievers import QueryFusionRetriever
-from llama_index.retrievers.bm25 import BM25Retriever
+# from llama_index.core.retrievers import QueryFusionRetriever
+# from llama_index.retrievers.bm25 import BM25Retriever
 import nest_asyncio
-from llama_index.vector_stores.chroma import ChromaVectorStore
-from llama_index.core.storage.docstore import SimpleDocumentStore
-from llama_index.core import VectorStoreIndex, StorageContext
+# from llama_index.vector_stores.chroma import ChromaVectorStore
+# from llama_index.core.storage.docstore import SimpleDocumentStore
+# from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.groq import Groq
 from llama_index.core import Settings
