@@ -13,7 +13,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from llama_index.embeddings.langchain import LangchainEmbedding
 nest_asyncio.apply()
 
-model_name = "Alibaba-NLP/gte-large-en-v1.5"
+model_name = "Snowflake/snowflake-arctic-embed-l"
 model_kwargs = {'device': 'cpu', 'trust_remote_code':'True'} # set True to compute cosine similarity
 model = HuggingFaceEmbeddings(
     model_name=model_name,
