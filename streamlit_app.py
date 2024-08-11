@@ -12,7 +12,7 @@ import streamlit as st
 import os
 nest_asyncio.apply()
 
-os.environ["HF_TOKEN"] = st.secret["HF_TOKEN"]
+os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
 
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
 Settings.embed_model = HuggingFaceEmbedding(model_name="dunzhang/stella_en_400M_v5", trust_remote_code = True)
