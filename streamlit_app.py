@@ -5,7 +5,7 @@ import nest_asyncio
 # from llama_index.vector_stores.chroma import ChromaVectorStore
 # from llama_index.core.storage.docstore import SimpleDocumentStore
 # from llama_index.core import VectorStoreIndex, StorageContext
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.embeddings.huggingface_optimum import OptimumEmbedding
 from llama_index.llms.groq import Groq
 from llama_index.core import Settings
 import streamlit as st
@@ -13,6 +13,10 @@ import os
 nest_asyncio.apply()
 
 os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
+OptimumEmbedding.create_and_save_optimum_model(
+    "dunzhang/stella_en_400M_v5",
+    "./bge_onnx",
+)
 
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
 Settings.embed_model = HuggingFaceEmbedding(model_name="dunzhang/stella_en_400M_v5", trust_remote_code = True)
@@ -48,7 +52,7 @@ st.title("Legal Documents Hybrid Search")
 
 search = st.text_input("Search through documents by keyword", value="")
 
-mod = HuggingFaceEmbedding(model_name="dunzhang/stella_en_400M_v5", trust_remote_code = True)
+mod = embed_model = OptimumEmbedding(folder_name="./bge_onnx")
 
 if st.button("Search"):
     embedding = mod.get_text_embedding(search)
