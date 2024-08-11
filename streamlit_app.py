@@ -59,7 +59,7 @@ st.title("Legal Documents Hybrid Search")
 search = st.text_input("Search through documents by keyword", value="")
 
 if st.button("Search"):
-    embedding = model.get_text_embedding(search)
+    embedding = embed_model.get_text_embedding(search)
     st.write(len(embedding))
     # nodes = retriever.retrieve(search)
     # for node in nodes:
