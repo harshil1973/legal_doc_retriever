@@ -4,6 +4,7 @@ llama-index-retrievers-bm25
 langchain
 langchain-community
 llama-index-embeddings-langchain
+sentence_transformers
 llama-index-llms-groq
 llama-index-vector-stores-chroma
 xformers
