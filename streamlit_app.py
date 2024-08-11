@@ -10,17 +10,23 @@ from llama_index.llms.groq import Groq
 from llama_index.core import Settings
 import streamlit as st
 import os
+from langchain.embeddings import HuggingFaceBgeEmbeddings
+from llama_index.embeddings.langchain import LangchainEmbedding
 nest_asyncio.apply()
 
-os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
-OptimumEmbedding.create_and_save_optimum_model(
-    "dunzhang/stella_en_400M_v5",
-    "./bge_onnx",
-    export_kwargs={'trust_remote_code': True}
+model_name = "dunzhang/stella_en_400M_v5"
+model_kwargs = {'device': 'cpu', 'trust_remote_code':'True'} # set True to compute cosine similarity
+model = HuggingFaceBgeEmbeddings(
+    model_name=model_name,
+    model_kwargs=model_kwargs,
 )
 
+embed_model = LangchainEmbedding(model)
+
+os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
+
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
-Settings.embed_model = HuggingFaceEmbedding(model_name="dunzhang/stella_en_400M_v5", trust_remote_code = True)
+Settings.embed_model = embed_model
 
 # db = chromadb.PersistentClient(path="./legal_doc_hybrid_v2")
 # chroma_collection = db.get_or_create_collection("dense_vectors")
@@ -53,10 +59,8 @@ st.title("Legal Documents Hybrid Search")
 
 search = st.text_input("Search through documents by keyword", value="")
 
-mod = embed_model = OptimumEmbedding(folder_name="./bge_onnx")
-
 if st.button("Search"):
-    embedding = mod.get_text_embedding(search)
+    embedding = model.get_text_embedding(search)
     st.write(len(embedding))
     # nodes = retriever.retrieve(search)
     # for node in nodes:
