@@ -16,6 +16,7 @@ os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
 OptimumEmbedding.create_and_save_optimum_model(
     "dunzhang/stella_en_400M_v5",
     "./bge_onnx",
+    trust_remote_code = True
 )
 
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
