@@ -9,13 +9,13 @@ from llama_index.llms.groq import Groq
 from llama_index.core import Settings
 import streamlit as st
 import os
-from langchain.embeddings import HuggingFaceBgeEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from llama_index.embeddings.langchain import LangchainEmbedding
 nest_asyncio.apply()
 
 model_name = "dunzhang/stella_en_400M_v5"
 model_kwargs = {'device': 'cpu', 'trust_remote_code':'True'} # set True to compute cosine similarity
-model = HuggingFaceBgeEmbeddings(
+model = HuggingFaceEmbeddings(
     model_name=model_name,
     model_kwargs=model_kwargs,
 )
