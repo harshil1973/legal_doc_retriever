@@ -60,7 +60,7 @@ search = st.text_input("Search through documents by keyword", value="")
 
 if st.button("Search"):
     embedding = embed_model.get_text_embedding(search)
-    st.write(len(embedding))
+    st.write(embedding[:30])
     # nodes = retriever.retrieve(search)
     # for node in nodes:
     #     st.write(node.metadata['file_name'])
