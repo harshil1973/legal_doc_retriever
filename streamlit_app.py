@@ -47,7 +47,6 @@ search_btn = st.button("Search")
 
 if search_btn:
     nodes = retriever.retrieve(search)
-    st.write(len(nodes))
     for node in nodes:
         st.write(node.metadata['file_name'])
         st.write("Node-id = " + node.node_id)
