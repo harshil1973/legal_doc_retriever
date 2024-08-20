@@ -50,4 +50,5 @@ if search_btn:
     for node in nodes:
         st.write(node.metadata['file_name'])
         st.write("---")
-        display_source_node(node, source_length=5000)
+        st.write("Node-id = " + node.node_id)
+        st.write("Text = " +node.text)
