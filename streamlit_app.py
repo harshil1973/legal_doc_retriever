@@ -50,4 +50,4 @@ if search_btn:
     for node in nodes:
         st.write(node.metadata['file_name'])
         st.write("---")
-        st.write(display_source_node(node, source_length=5000))
+        display_source_node(node, source_length=5000)
