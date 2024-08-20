@@ -1,68 +1,53 @@
+from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.response.notebook_utils import display_source_node
-# from llama_index.core.retrievers import QueryFusionRetriever
-# from llama_index.retrievers.bm25 import BM25Retriever
+from llama_index.core import VectorStoreIndex
 import nest_asyncio
-# from llama_index.vector_stores.chroma import ChromaVectorStore
-# from llama_index.core.storage.docstore import SimpleDocumentStore
-# from llama_index.core import VectorStoreIndex, StorageContext
+from llama_index.vector_stores.qdrant import QdrantVectorStore
+from qdrant_client import AsyncQdrantClient
 from llama_index.llms.groq import Groq
 from llama_index.core import Settings
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 import streamlit as st
 import os
-from langchain.embeddings import HuggingFaceEmbeddings
-from llama_index.embeddings.langchain import LangchainEmbedding
 nest_asyncio.apply()
-
-model_name = "Snowflake/snowflake-arctic-embed-l"
-model_kwargs = {'device': 'cpu', 'trust_remote_code':'True'} # set True to compute cosine similarity
-model = HuggingFaceEmbeddings(
-    model_name=model_name,
-    model_kwargs=model_kwargs,
-)
-
-embed_model = LangchainEmbedding(model)
-
 os.environ["HF_TOKEN"] = st.secrets["HF_TOKEN"]
+qdrant_key = st.secrets["qdrant"]
 
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
-Settings.embed_model = embed_model
+Settings.embed_model = HuggingFaceEmbedding(model_name="law-ai/CustomInLawBERT", trust_remote_code = True)
 
-# db = chromadb.PersistentClient(path="./legal_doc_hybrid_v2")
-# chroma_collection = db.get_or_create_collection("dense_vectors")
-# vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+qdrant_client = AsyncQdrantClient(
+    url="https://a93013fc-2adb-4ba0-a6a1-23d524b33f9b.europe-west3-0.gcp.cloud.qdrant.io:6333", 
+    api_key=qdrant_key,
+)
 
-# docstore = SimpleDocumentStore.from_persist_path("docstore.json")
+@st.cache_resource(show_spinner=False)
+def load_data():
+    vector_store = QdrantVectorStore(client=qdrant_client, collection_name="legal_v1", enable_hybrid=True)
+    return VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
-# storage_context = StorageContext.from_defaults(
-#     docstore=docstore, vector_store=vector_store
-# )
-# index = VectorStoreIndex(nodes=[], storage_context=storage_context)
+@st.cache_resource(show_spinner=False)
+def load_retriver():
+    return VectorIndexRetriever(
+    index=index,
+    similarity_top_k=5,
+    sparse_top_k=5,
+    vector_store_query_mode="hybrid"
+    )
 
-# retriever = QueryFusionRetriever(
-#     [
-#         index.as_retriever(similarity_top_k=5),
-#         BM25Retriever.from_defaults(
-#             docstore=index.docstore, similarity_top_k=5
-#         ),
-#     ],
-#     num_queries=1,
-#     use_async=True,
-#     retriever_weights=[0.4, 0.6],
-#     similarity_top_k=5,
-#     mode="relative_score",
-#     verbose=True,
-# )
+index = load_data()
 
-# Show title and description.
+retriever = load_retriver()
+
 st.title("Legal Documents Hybrid Search")
 
 search = st.text_input("Search through documents by keyword", value="")
 
-if st.button("Search"):
-    embedding = embed_model.get_text_embedding(search)
-    st.write(embedding[:30])
-    # nodes = retriever.retrieve(search)
-    # for node in nodes:
-    #     st.write(node.metadata['file_name'])
-    #     # print("---")
-    #     st.write(node)
+search_btn = st.button("Search")
+
+if search_btn:
+    nodes = retriever.retrieve(search)
+    for node in nodes:
+        st.write(node.metadata['file_name'])
+        st.write("---")
+        st.write(display_source_node(node, source_length=5000))
