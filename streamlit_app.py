@@ -49,6 +49,7 @@ if search_btn:
     nodes = retriever.retrieve(search)
     for node in nodes:
         st.write(node.metadata['file_name'])
+        st.write("similarity = " + node.similarity)
         st.write("Node-id = " + node.node_id)
         st.write("Text = " +node.text)
         st.write("---")
