@@ -30,8 +30,8 @@ def load_data():
 def load_retriver():
     return VectorIndexRetriever(
     index=index,
-    similarity_top_k=8,
-    sparse_top_k=8,
+    similarity_top_k=10,
+    sparse_top_k=10,
     vector_store_query_mode="hybrid"
     )
 
