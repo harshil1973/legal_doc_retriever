@@ -3,7 +3,7 @@ from llama_index.core.response.notebook_utils import display_source_node
 from llama_index.core import VectorStoreIndex
 import nest_asyncio
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from qdrant_client import AsyncQdrantClient
+from qdrant_client import QdrantClient
 from llama_index.llms.groq import Groq
 from llama_index.core import Settings
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -16,7 +16,7 @@ qdrant_key = st.secrets["qdrant"]
 Settings.llm = Groq(model="llama3-8b-8192", api_key="")
 Settings.embed_model = HuggingFaceEmbedding(model_name="law-ai/CustomInLawBERT", trust_remote_code = True)
 
-qdrant_client = AsyncQdrantClient(
+qdrant_client = QdrantClient(
     url="https://a93013fc-2adb-4ba0-a6a1-23d524b33f9b.europe-west3-0.gcp.cloud.qdrant.io:6333", 
     api_key=qdrant_key,
 )
