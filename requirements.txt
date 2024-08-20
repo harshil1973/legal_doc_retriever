@@ -6,4 +6,3 @@ llama-index-vector-stores-qdrant
 xformers
 ipython
 matplotlib
-fastembed
